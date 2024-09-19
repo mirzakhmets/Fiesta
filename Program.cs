@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.IO;
+using Microsoft.Win32;
 
 namespace Fiesta
 {
@@ -32,8 +33,54 @@ namespace Fiesta
         Program.Scan(enumerateDirectory, trie);
     }
 
+    public static void CheckRuns() {
+		try {
+			RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\OVG-Developers", true);
+			
+			int runs = -1;
+			
+			if (key != null) {
+				runs = (int) key.GetValue("Runs");
+			} else {
+				key = Registry.CurrentUser.CreateSubKey("Software\\OVG-Developers");
+			}
+			
+			runs = runs + 1;
+			
+			key.SetValue("Runs", runs);
+			
+			if (runs > 10) {
+				Console.WriteLine("Number of runs expired.");
+				Console.WriteLine("Please register the application (visit https://ovg-developers.mystrikingly.com/ for purchase).");
+				
+				Environment.Exit(0);
+			}
+		} catch (Exception e) {
+			Console.WriteLine(e.Message);
+		}
+	}
+	
+	public static bool IsRegistered() {
+		try {
+			RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\OVG-Developers");
+			
+			if (key != null && key.GetValue("Registered") != null) {
+				return true;
+			}
+		} catch (Exception e) {
+			Console.WriteLine(e.Message);
+		}
+		
+		return false;
+	}
+    
     private static void Main(string[] args)
     {
+    	if (!IsRegistered()) {
+				CheckRuns();
+			}
+			
+    
       if (args.Length != 2)
       {
         Console.WriteLine("Usage: [ -q <file name> | -s <directory> ]");
