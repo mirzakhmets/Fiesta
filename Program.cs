@@ -1,7 +1,10 @@
 ﻿
 using System;
 using System.IO;
+
+#if TRIAL
 using Microsoft.Win32;
+#endif
 
 namespace Fiesta
 {
@@ -33,6 +36,7 @@ namespace Fiesta
         Program.Scan(enumerateDirectory, trie);
     }
 
+    #if TRIAL
     public static void CheckRuns() {
 		try {
 			RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\OVG-Developers", true);
@@ -73,13 +77,15 @@ namespace Fiesta
 		
 		return false;
 	}
+    #endif
     
     private static void Main(string[] args)
     {
+    	#if TRIAL
     	if (!IsRegistered()) {
 				CheckRuns();
 			}
-			
+		#endif
     
       if (args.Length != 2)
       {
