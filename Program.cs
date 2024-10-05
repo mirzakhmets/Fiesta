@@ -1,4 +1,6 @@
 ﻿
+#define TRIAL
+
 using System;
 using System.IO;
 
@@ -53,7 +55,7 @@ namespace Fiesta
 			
 			key.SetValue("Runs", runs);
 			
-			if (runs > 10) {
+			if (runs > 30) {
 				Console.WriteLine("Number of runs expired.");
 				Console.WriteLine("Please register the application (visit https://ovg-developers.mystrikingly.com/ for purchase).");
 				
